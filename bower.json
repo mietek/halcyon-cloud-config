@@ -1,6 +1,6 @@
 {
   "name": "halcyon-cloud-config",
-  "description": "JavaScript cloud-config generator for deploying Haskell applications with Halcyon",
+  "description": "JavaScript generator of cloud-config files, using Halcyon to deploy Haskell applications",
   "authors": [
     "Miëtek Bak <hello@mietek.io>"
   ],

@@ -1,7 +1,7 @@
 _halcyon-cloud-config_
 ======================
 
-JavaScript _cloud-config_ generator for deploying Haskell applications with [Halcyon](https://halcyon.sh/).  Specialised for deploying to [DigitalOcean](https://digitalocean.com/).
+JavaScript generator of _cloud-config_ files, using [Halcyon](https://halcyon.sh/) to deploy Haskell applications.  Intended for use with [DigitalOcean](https://digitalocean.com/).  Supports CentOS 7.0 and Ubuntu 14.04.
 
 
 Usage
@@ -9,64 +9,35 @@ Usage
 
 The generated _cloud-config_ file performs a number of actions:
 
-1. Creates an `app` user to install and run the application.
-2. Starts a `setup-monitor` OS service.
+1. Creates a new user account to install and run the application, named `app`.
+2. Starts a setup monitor OS service.
 3. Installs the OS packages required for Halcyon, including _git_.
 4. Uses _git_ to install Halcyon into `/app/halcyon`.
 5. Uses Halcyon to install the application into `/app`.
 6. Registers the application as an OS service.
 7. Starts the application.
-8. Stops the setup monitor, after a configurable delay.
+8. Stops the setup monitor.
 
-The setup monitor responds to HTTP `GET` requests made to a configurable port with a streaming log of the installation process.  By default, the setup monitor is stopped 1 hour after the installation begins.
+The setup monitor responds to HTTP `GET` requests with a streaming log of the installation process.  By default, the log is available for 1 hour after the installation begins.
 
-The application service is named after the executable name declared in the application’s Cabal package description.  The default command used to run the application also references the executable name.
+A Cabal package description file declaring an executable must be included at the top level of the application source repository.  The name of the executable will be used as the OS service name, and as part of the default command for running the application.
 
 
 ### Example
 
-```js
-var HalcyonCloudConfig = require('halcyon-cloud-config');
-
-DigitalOcean.createDroplet(
-  hostname,
-  selectedSize.slug,
-  selectedImage.slug,
-  selectedRegion.slug,
-  selectedKeys.map(function (key) {
-      return key.id;
-    }),
-  HalcyonCloudConfig.formatDigitalOceanUserData(
-    selectedImage.distribution.toLowerCase(),
-    sourceUrl, {
-      envVars:     envVars,
-      command:     undefined,
-      description: undefined,
-      port:        undefined
-    }),
-  function (droplet, err) {
-    if (droplet) {
-      console.log('Created droplet:', droplet.id);
-    } else {
-      console.log('Failed to create droplet:', err);
-    }
-  }.bind(this),
-  token);
-```
-
-See [_halcyon-website_](https://github.com/mietek/halcyon-website/) for a complete example.
+_halcyon-cloud-config_ is used by [Haskell on DigitalOcean](https://halcyon.sh/deploy/).  Please see the source code of [_halcyon-website_](https://github.com/mietek/halcyon-website/) for a complete usage example.
 
 
-### Functions
+### Reference
 
 #### `formatDigitalOceanUserData(platform, sourceUrl, opts)`
 
-Returns a _cloud-config_ file, intended to be used as the `user_data` parameter for the DigitalOcean [“Create a new droplet”](https://developers.digitalocean.com/v2/#create-a-new-droplet) API endpoint.  Supports CentOS 7.0 and Ubuntu 14.04.
+Returns a _cloud-config_ file as a string, intended to be supplied as the `user_data` parameter to the DigitalOcean [“Create a new droplet”](https://developers.digitalocean.com/v2/#create-a-new-droplet) API endpoint.
 
 | Argument           | Description 
 | :----------------- | :----------
 | `platform`         | Either `centos` or `ubuntu`.  Required.
-| `sourceUrl`        | Application source _git_ repository URL.  Required.
+| `sourceUrl`        | _git_ URL of the application source repository.  Required.
 | `opts.envVars`     | Environment variables to set both before installing and running the application.
 | `opts.command`     | Command to run the application.  Defaults to `/app/bin/${executable}`.
 | `opts.description` | Application description.  Defaults to `Haskell on DigitalOcean app`.
@@ -87,4 +58,4 @@ Scripts using _halcyon-cloud-config_ must be processed with [_webpack_](https://
 About
 -----
 
-Made by [Miëtek Bak](https://mietek.io/).  Published under the [MIT X11 license](https://mietek.io/license/).
+Made by [Miëtek Bak](https://mietek.io/).  Published under the [MIT X11 license](https://mietek.io/license/).  Not affiliated with [DigitalOcean](https://digitalocean.com/).
