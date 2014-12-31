@@ -1,0 +1,10 @@
+{
+  "name": "halcyon-cloud-config",
+  "description": "JavaScript cloud-config generator for deploying Haskell applications with Halcyon",
+  "authors": [
+    "Miëtek Bak <hello@mietek.io>"
+  ],
+  "license": "MIT X11",
+  "homepage": "https://github.com/mietek/halcyon-cloud-config",
+  "main": "index.js"
+}
