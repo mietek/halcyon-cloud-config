@@ -8,7 +8,6 @@ WantedBy=multi-user.target
 User=app
 WorkingDirectory=/app
 Environment=PORT={{appPort}}
-Environment=LANG=C.UTF-8
 {{appEnvVars}}
 Restart=on-failure
-ExecStart=__APP_COMMAND__
+ExecStart=/bin/bash -c 'source <( /app/halcyon/halcyon paths ) && __APP_COMMAND__'
