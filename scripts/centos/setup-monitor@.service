@@ -3,6 +3,7 @@ Description=Haskell on DigitalOcean setup monitor
 
 [Service]
 User=app
+WorkingDirectory=/app
 StandardInput=null
 StandardOutput=socket
 Restart=on-failure

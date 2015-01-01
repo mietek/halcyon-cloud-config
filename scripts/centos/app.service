@@ -6,6 +6,7 @@ WantedBy=multi-user.target
 
 [Service]
 User=app
+WorkingDirectory=/app
 Environment=PORT={{appPort}}
 {{appEnvVars}}
 Restart=on-failure
