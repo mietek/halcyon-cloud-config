@@ -97,11 +97,12 @@ install_app () {
 			HALCYON_NO_SELF_UPDATE=1 \
 				/app/halcyon/halcyon executable \"${clone_dir}\" 2>'/dev/null'
 		"
-	); then
-		log_warning 'Cannot determine app executable'
-		return 0
+	) ||
+		! expect_existing "/app/bin/${executable}"
+	then
+		log_error 'Failed to determine executable'
+		return 1
 	fi
-	expect_existing "/app/bin/${executable}"
 
 	local app_command
 	app_command='{{appCommand}}'
@@ -111,14 +112,20 @@ install_app () {
 
 	log 'Registering app'
 
-	register_app "${executable}" "${app_command}" || return 1
+	if ! register_app "${executable}" "${app_command}"; then
+		log_error 'Failed to register app'
+		return 1
+	fi
 
 	log 'Starting app'
 
-	start_app "${executable}" || return 1
+	if ! start_app "${executable}"; then
+		log_error 'Failed to start app'
+		return 1
+	fi
 
 	local ip_address
-	ip_address=$( curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address ) || return 1
+	ip_address=$( curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address ) || true
 
 	log
 	log 'Installation succeeded'
