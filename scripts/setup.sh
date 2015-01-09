@@ -107,7 +107,15 @@ install_app () {
 	local app_command
 	app_command='{{appCommand}}'
 	if [[ -z "${app_command}" ]]; then
-		app_command="/app/bin/${executable}"
+		if [[ ! -f "${clone_dir}/Procfile" ]] ||
+			! app_command=$(
+				filter_matching '^web: ' <"${clone_dir}/Procfile" |
+				match_exactly_one |
+				sed 's/^web: //'
+			)
+		then
+			app_command="/app/bin/${executable}"
+		fi
 	fi
 
 	log 'Registering app'
