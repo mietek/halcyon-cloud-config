@@ -70,7 +70,7 @@ fi
 
 
 install_app () {
-	local clone_dir source_dir
+	local clone_dir
 	clone_dir=$( get_tmp_dir 'setup-clone' ) || return 1
 
 	log_begin 'Cloning {{appSourceUrl}}...'
