@@ -87,8 +87,21 @@ install_app () {
 		HOME='/app' \
 		HALCYON_NO_SELF_UPDATE=1 \
 		HALCYON_NO_CLEAN_CACHE=1 \
+		HALCYON_INTERNAL_NO_ANNOUNCE_INSTALL=1 \
 			/app/halcyon/halcyon install \"${clone_dir}\"
 	" || return 1
+
+	local label
+	if ! label=$(
+		sudo -u app bash -c "
+			HOME='/app' \
+			HALCYON_NO_SELF_UPDATE=1 \
+				/app/halcyon/halcyon label \"${clone_dir}\" 2>'/dev/null'
+		"
+	); then
+		log_error 'Failed to determine executable'
+		return 1
+	fi
 
 	local executable
 	if ! executable=$(
@@ -136,7 +149,8 @@ install_app () {
 	ip_address=$( curl -s http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address ) || true
 
 	log
-	log 'Installation succeeded'
+	log
+	log_label 'App deployed:' "${label}"
 	log
 	log 'To see the app:'
 	log_indent "$ open http://${ip_address}:{{appPort}}"
@@ -144,5 +158,7 @@ install_app () {
 
 
 if ! install_app 2>>'/var/log/setup.log'; then
-	log_error 'Failed to install app' 2>>'/var/log/setup.log'
+	log
+	log
+	log_error 'Failed to deploy app' 2>>'/var/log/setup.log'
 fi
