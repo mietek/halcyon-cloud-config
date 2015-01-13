@@ -131,14 +131,10 @@ install_app () {
 		fi
 	fi
 
-	log 'Registering app'
-
 	if ! register_app "${executable}" "${app_command}"; then
 		log_error 'Failed to register app'
 		return 1
 	fi
-
-	log 'Starting app'
 
 	if ! start_app "${executable}"; then
 		log_error 'Failed to start app'
