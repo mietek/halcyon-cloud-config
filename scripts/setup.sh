@@ -83,6 +83,25 @@ install_app () {
 	fi
 	log_end "done, ${commit_hash:0:7}"
 
+	local label executable
+	if ! label=$(
+		sudo -u app bash -c "
+			HOME='/app' \
+			HALCYON_NO_SELF_UPDATE=1 \
+				/app/halcyon/halcyon label \"${clone_dir}\" 2>'/dev/null'
+		"
+	) || ! executable=$(
+		sudo -u app bash -c "
+			HOME='/app' \
+			HALCYON_NO_SELF_UPDATE=1 \
+				/app/halcyon/halcyon executable \"${clone_dir}\" 2>'/dev/null'
+		"
+	)
+	then
+		log_error 'Failed to detect app'
+		return 1
+	fi
+
 	sudo -u app bash -c "
 		HOME='/app' \
 		HALCYON_NO_SELF_UPDATE=1 \
@@ -90,32 +109,6 @@ install_app () {
 		HALCYON_INTERNAL_NO_ANNOUNCE_INSTALL=1 \
 			/app/halcyon/halcyon install \"${clone_dir}\"
 	" || return 1
-
-	local label
-	if ! label=$(
-		sudo -u app bash -c "
-			HOME='/app' \
-			HALCYON_NO_SELF_UPDATE=1 \
-				/app/halcyon/halcyon label \"${clone_dir}\" 2>'/dev/null'
-		"
-	); then
-		log_error 'Failed to determine executable'
-		return 1
-	fi
-
-	local executable
-	if ! executable=$(
-		sudo -u app bash -c "
-			HOME='/app' \
-			HALCYON_NO_SELF_UPDATE=1 \
-				/app/halcyon/halcyon executable \"${clone_dir}\" 2>'/dev/null'
-		"
-	) ||
-		! expect_existing "/app/bin/${executable}"
-	then
-		log_error 'Failed to determine executable'
-		return 1
-	fi
 
 	local app_command
 	app_command='{{appCommand}}'
