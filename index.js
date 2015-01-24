@@ -47,7 +47,7 @@ var formatFile = {
     appEnvVars: function (envVars) {
       return Object.keys(envVars || {}).map(function (key) {
           return 'Environment="' + key + '=' + (envVars[key] || '') + '"';
-        });
+        }).join('\n');
     },
     setupPartSh: function (opts) {
       return format(rawFile['centos'].setupPartSh, {
@@ -72,7 +72,7 @@ var formatFile = {
     appEnvVars: function (envVars) {
       return Object.keys(envVars || {}).map(function (key) {
           return 'env ' + key + '="' + (envVars[key] || '') + '"';
-        });
+        }).join('\n');
     },
     setupPartSh: function (opts) {
       return format(rawFile['ubuntu'].setupPartSh, {
@@ -95,7 +95,7 @@ var formatFile = {
   setupEnvVars: function (envVars) {
     return Object.keys(envVars || {}).map(function (key) {
         return 'export ' + key + '=\'' + (envVars[key] || '') + '\'';
-      });
+      }).join('\n');
   },
   setupSh: function (platform, sourceUrl, opts) {
     return format(rawFile.setupSh, {
