@@ -86,15 +86,17 @@ install_app () {
 	local label executable
 	if ! label=$(
 		sudo -u app bash -c "
-			HOME='/app' \
-			HALCYON_NO_SELF_UPDATE=1 \
-				/app/halcyon/halcyon label \"${clone_dir}\" 2>'/dev/null'
+			{{setupEnvVars}}
+			export HOME='/app'
+			export HALCYON_NO_SELF_UPDATE=1
+			/app/halcyon/halcyon label \"${clone_dir}\" 2>'/dev/null'
 		"
 	) || ! executable=$(
 		sudo -u app bash -c "
-			HOME='/app' \
-			HALCYON_NO_SELF_UPDATE=1 \
-				/app/halcyon/halcyon executable \"${clone_dir}\" 2>'/dev/null'
+			{{setupEnvVars}}
+			export HOME='/app'
+			export HALCYON_NO_SELF_UPDATE=1
+			/app/halcyon/halcyon executable \"${clone_dir}\" 2>'/dev/null'
 		"
 	)
 	then
@@ -103,11 +105,12 @@ install_app () {
 	fi
 
 	sudo -u app bash -c "
-		HOME='/app' \
-		HALCYON_NO_SELF_UPDATE=1 \
-		HALCYON_NO_CLEAN_CACHE=1 \
-		HALCYON_INTERNAL_NO_ANNOUNCE_INSTALL=1 \
-			/app/halcyon/halcyon install \"${clone_dir}\"
+		{{setupEnvVars}}
+		export HOME='/app'
+		export HALCYON_NO_SELF_UPDATE=1
+		export HALCYON_NO_CLEAN_CACHE=1
+		export HALCYON_INTERNAL_NO_ANNOUNCE_INSTALL=1
+		/app/halcyon/halcyon install \"${clone_dir}\"
 	" || return 1
 
 	local app_command
