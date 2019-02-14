@@ -1,3 +1,10 @@
+-------------------------------------------------------------------------------
+
+This project is no longer maintained.
+
+-------------------------------------------------------------------------------
+
+
 _halcyon-cloud-config_
 ======================
 
@@ -58,4 +65,4 @@ Scripts using _halcyon-cloud-config_ must be processed with [_webpack_](https://
 About
 -----
 
-Made by [Miëtek Bak](https://mietek.io/).  Published under the [MIT X11 license](https://mietek.io/license/).  Not affiliated with [DigitalOcean](https://digitalocean.com/).
+Made by [Miëtek Bak](https://mietek.io/).  Published under the BSD license.  Not affiliated with [DigitalOcean](https://digitalocean.com/).
